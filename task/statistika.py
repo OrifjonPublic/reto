@@ -1,0 +1,91 @@
+from django.db.models import Count, Q
+from django.conf import settings
+from .models import Task
+from user.models import User, Position, Sector
+
+
+#asosiy sahifa uchun
+def all_stats_main():
+    xodim = Position.objects.get(name=settings.EMPLOYEE)
+    manager = Position.objects.get(name=settings.MANAGER)
+    admin = Position.objects.get(name=settings.ADMIN)
+    director = Position.objects.get(name=settings.DIRECTOR)
+
+    total_tasks = Task.objects.filter(is_active=True).count()
+
+    all_tasks = Task.objects.filter(is_active=True)
+
+    # Har bir status bo'yicha vazifalar sonini hisoblash
+    tasks_by_status = Task.objects.filter(rank__in=[xodim, manager]).values('status').annotate(total=Count('status'))
+
+    doing_tasks = all_tasks.filter(status='doing').count()
+    procent_doing = (doing_tasks / total_tasks) * 100 if total_tasks else 0
+    # Bajarilgan vazifalar sonini hisoblash
+
+    finished_tasks = all_tasks.filter(status='finished').count()
+    procent_finished = (finished_tasks / total_tasks) * 100 if total_tasks else 0
+
+    missed_tasks = all_tasks.filter(status='missed').count()
+    procent_missed = (missed_tasks / total_tasks) * 100 if total_tasks else 0
+
+    canceled_tasks = all_tasks.filter(status='canceled').count()
+    procent_canceled = (canceled_tasks / total_tasks) * 100 if total_tasks else 0
+
+    # Muhimligi yuqori bo'lgan tasklar soni
+    # important_tasks = Task.objects.filter(label='eng muhim').count()
+
+    # Statistikaning lug'at ko'rinishini yaratish
+
+    main_stats = {
+        'total_tasks': total_tasks,
+        'doing_tasks': [doing_tasks, procent_doing],
+        'finished_tasks': [finished_tasks, procent_finished],
+        'missed_tasks': [missed_tasks, procent_missed],
+        'canceled_tasks': [canceled_tasks, procent_canceled]
+    }
+
+    return main_stats
+
+# Har bir sektor uchun vazifalarning umumiy statistikasini olish
+
+
+# ALL SECTOR STATS va ularning vazifalar statistikasi haqida ma'lumotni olish
+def all_sector():
+    sector_task_stats = (
+            Sector.objects
+            .annotate(
+                total_tasks=Count('user__tasks_assigned_to', distinct=True),
+                tasks_missed=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='missed')),
+                tasks_doing=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='doing')),
+                tasks_finished=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='finished')),
+                tasks_canceled=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='canceled')),
+            )
+            .order_by('name')
+            .values(
+                'name', 'total_tasks', 'tasks_missed', 'tasks_doing',
+                'tasks_finished', 'tasks_canceled'
+            )
+        )
+    sector_stats_list = []
+    for sector in sector_task_stats:
+        sector_stats = {}
+        
+        sector_stats['name'] = sector['name']
+        sector_stats['total'] = sector['total_tasks']
+        
+        procent = (sector['tasks_doing'] / sector['total_tasks']) * 100 if sector['total_tasks'] else 0
+        sector_stats['doing'] = sector['tasks_doing'], procent
+        
+        procent_m = (sector['tasks_missed'] / sector['total_tasks']) * 100 if sector['total_tasks'] else 0
+        sector_stats['missed'] = sector['tasks_missed'], procent_m
+        
+        procent_f = (sector['tasks_finished'] / sector['total_tasks']) * 100 if sector['total_tasks'] else 0
+        sector_stats['finished'] = sector['finished'], procent_f
+        
+        procent_c = (sector['tasks_canceled'] / sector['total_tasks']) * 100 if sector['total_tasks'] else 0
+        sector_stats['canceled'] = sector['canceled'], procent_c
+        
+        sector_stats_list.append(sector_stats)
+
+    all_sector_stats = sector_stats_list
+    return all_sector_stats
