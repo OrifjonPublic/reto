@@ -50,7 +50,7 @@ class User(AbstractUser):
     sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Bo‘lim'))
 
     def __str__(self) -> str:
-        return self.username
+        return self.username 
 
     class Meta:
         verbose_name = _('User')

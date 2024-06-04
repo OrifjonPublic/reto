@@ -33,7 +33,7 @@ class Task(models.Model):
     problem = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.assigned_by} gave a task to {self.assigned_to}"
+        return f"{self.assigned_by.username} gave a task to {self.assigned_to.username}"
 
     @property
     def all_days(self):
@@ -68,7 +68,7 @@ class TaskContent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.get_content_type_display()} - {self.task.title}'
+        return f'{self.get_content_type_display()} - {self.task.id}'
 
     class Meta:
         verbose_name = _('Task Content')

@@ -41,9 +41,18 @@ INSTALLED_APPS = [
 
 from datetime import timedelta
 
+REST_FRAMEWORK = {
+
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+}
+
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=150),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=350),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -124,11 +133,32 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+
 STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'OPTIONS': {
+            'location': BASE_DIR / 'media',
+        },
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        'OPTIONS': {
+            'location': BASE_DIR / 'staticfiles',
+        },
     },
 }
+
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "django.core.files.storage.FileSystemStorage",
+#     }
+# }
 
 ROOT_URLCONF = 'web.urls'
 
@@ -218,7 +248,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.User'
 
 
-EMPLOYEE_2 = 'xodim'
-EMPLOYEE_1 = 'manager'
+EMPLOYEE = 'xodim'
+MANAGER = 'manager'
 BOSS = 'director'
 ASSIST = 'admin'

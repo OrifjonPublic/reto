@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from .models import *
 
 from user.example import decrease
-
-
 User = get_user_model()
 
 
@@ -17,7 +15,14 @@ class TaskSerializer(serializers.ModelSerializer):
             'id', 'assigned_to','assigned_by', 'reason', 'event', 'deadline',
             'status', 'privacy', 'financial_help', 'problem'    ]
         extra_kwargs = {
-            'assigned_by': {'read_only': True}}
+            'assigned_by': {'read_only': True},
+            'reason': {'required': False, 'default': ''},
+            'event': {'required': False, 'default': ''},
+            'status': {'required': False, 'default': 'doing'},
+            'privacy': {'required': False, 'default': 'open'},
+            'financial_help': {'required': False},
+            'problem': {'required': False, 'default': ''}
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,20 +30,32 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if self.request and not self.request._authenticate:
-            raise serializers.ValidationError('Must be logged in')
+            raise serializers.ValidationError('user must be log in :)')
+        if self.request == data.get('assigned_to'):
+            raise serializers.ValidationError('Bir kishi bir vaqtda topshiriq beruvchi va bajaruvchi bola olmaydi')
         return data
     
-
     def create(self, validated_data):
         user = self.request.user
+        print('---------------')
+        print(self)
         task = Task.objects.create(assigned_by=user,**validated_data)
-        images = validated_data.getlist('images')
-        for i in images:    
+        images = self.context.get('images')
+        # audios = self.getlist('audios')
+        # if images:
+            # images = decrease(images)
+        for i in images:
+            print('rasmlar otdi :)')   
+            print(i)
+            # if i[-3:] in ('PNG', 'png', 'JPEG', 'jpg', 'jpeg', 'Jpeg', 'Png', 'JPG'):
+            #     raise serializers.ValidationError('Rasm yuklashda xatolik. Faqat PNG va Jpeg rasmlar yuklang') 
             TaskContent.objects.create(task = task, content_type='image', image=i)
-        audios = validated_data.getlist('audios')
+        audios = self.context.get('audios')
         for i in audios:    
+            # if i[-3:] in ('mp3', 'mp4', 'doc'):
+            #     raise serializers.ValidationError('Audio yuklashda xatolik.') 
             TaskContent.objects.create(task = task, content_type='audio', audio=i)
-        texts = validated_data.getlist('texts')
+        texts = self.context.get('texts')
         for i in texts:    
             TaskContent.objects.create(task = task, content_type='text', text=i)
         return task
@@ -97,30 +114,13 @@ class TaskMessagesSerializer(serializers.ModelSerializer):
         }
     def create(self, validated_data):
         user = self.context.get('request').user
-        audios = validated_data.getlist('audio')
-        texts = validated_data.getlist('text')
-        images = validated_data.getlist('image')
-        
-        if audios:
-            for i in audios:
-                Message.objects.create(
+        contents = self.context.get('contents')
+        a = None        
+        if contents:
+            for i in contents:
+                a = Message.objects.create(
                     task=validated_data.get('task'),
                     sender=user,
                     audio = i
                     )
-        if texts:
-            for i in texts:
-                Message.objects.create(
-                    task=validated_data.get('task'),
-                    sender=user,
-                    text = i
-                    )
-        if images:
-            for i in images:
-                a = Message.objects.create(
-                    task=validated_data.get('task'),
-                    sender=user,
-                    image = i
-                    )
-        
         return a

@@ -28,12 +28,14 @@ class CreateTaskView(APIView):
         responses={201: TaskSerializer, 400: "Bad Request"}
     )
     def post(self,request):
-        serializer_class = TaskSerializer(data=request.data, context = {'request': request})
+        images = request.data.getlist('images')
+        texts = request.data.getlist('texts')
+        audios = request.data.getlist('audios')
+        serializer_class = TaskSerializer(data=request.data, context = {'request': request, 'images':images, 'audios':audios, 'texts':texts})
         if serializer_class.is_valid():
             serializer_class.save()
             return Response(data=serializer_class.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class EditTaskView(RetrieveUpdateDestroyAPIView):
@@ -54,15 +56,21 @@ class EditTaskContentView(RetrieveUpdateDestroyAPIView):
 
 
 class CreateTaskMessagesView(ListCreateAPIView):
-    queryset = Message.objects.all()
     serializer_class = TaskMessagesSerializer
     parser_classes = [MultiPartParser, FileUploadParser, JSONParser]
-    
-    def get_serializer(self, *args, **kwargs):
-        kwargs['context'] = self.get_serializer_context()
-        serializer = TaskMessagesSerializer(context={'request': self.request})
-        return super().get_serializer(*args, **kwargs)
 
+    def get(self, request):
+        queries = Message.objects.all()
+        serializer_class = TaskMessagesSerializer(queries, many=True)
+        return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        contents = request.data.getlist('message')
+        serializer = TaskMessagesSerializer(data=request.data, context = {'request': request, 'contents': contents})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EditTaskMessageView(RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()

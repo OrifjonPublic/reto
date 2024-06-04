@@ -23,3 +23,4 @@ urlpatterns = [
     path('message/edit/<int:id>/', views.EditTaskMessageView.as_view()),
 
 ]
+
