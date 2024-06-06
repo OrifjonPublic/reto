@@ -124,3 +124,28 @@ class TaskMessagesSerializer(serializers.ModelSerializer):
                     audio = i
                     )
         return a
+
+
+
+
+# LIST
+    
+    # Task
+
+class TaskListContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskContent
+        fields = ['text', 'image', 'audio',]
+
+class TaskListSerializer(serializers.ModelSerializer):
+    contents = TaskContentSerializer(many=True, read_only=True)
+    assigned_by = serializers.CharField(source='assigned_by.username', read_only=True)
+    assigned_to = serializers.CharField(source='assigned_to.username', read_only=True)
+
+    class Meta:
+        model = Task
+        fields = [
+            'id', 'assigned_to', 'assigned_by', 'reason', 'event', 'deadline', 
+            'status', 'privacy', 'created_at', 'updated_at', 'financial_help', 
+            'is_active', 'is_changed', 'problem', 'contents', 'all_days', 'remain_days'
+        ]
