@@ -82,6 +82,15 @@ class MyOwnSerializer(TokenObtainPairSerializer):
         return data
 
 
+class UserListSerializer(serializers.ModelSerializer):
+    rank = PositionSerializer()
+    # lavozim = serializers.CharField(source='rank.name')
+    sector = SectorSerializer()
+    class Meta:
+        model = User
+        fields = ('username', 'rank', 'sector', 'first_name', 'last_name')
+
+
 class UserProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)

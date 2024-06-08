@@ -13,6 +13,46 @@ from drf_yasg.utils import swagger_auto_schema
 from .serializers import *
 
 
+class TaskArchiveListView(APIView):
+    """
+    :parametr -> ids : [1,2,4] , id lar listi
+    """
+    def get(self,request):
+        queryset = Task.objects.filter(is_active=False)
+        serializer_class = TaskListSerializer(queryset, many=True)
+        return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+    def post(self, request):
+        ids = request.data.getlist('id')
+        if ids:
+            for i in ids:
+                t = Task.objects.get(id=i)
+                t.is_active=False 
+                t.save()
+            return Response({
+                'message': 'Arxivlandi'
+            })
+        return Response({
+            'message': 'Hech qanday id lar kelmadi'
+        })
+
+
+class TaskFinishView(APIView):
+    """
+    status: finished (canceled)
+    """
+    def post(self, request, id):
+        try:
+            queryset = Task.objects.get(id=id)
+        except Task.DoesNotExist as e:
+            raise APIException(e)
+        status = request.data.get('status')
+        if status:
+            queryset.status = status 
+            queryset.save()
+        serializer = TaskListSerializer(queryset)
+        return Response(data=serializer.data)
+        
+
 class CreateTaskView(APIView):
     serializer_class = TaskSerializer
     parser_classes = [MultiPartParser, JSONParser]

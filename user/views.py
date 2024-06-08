@@ -14,6 +14,27 @@ from user.models import *
 from user.serializers import *
 
 
+class XodimListView(APIView):
+    def get(self,request):
+        queryset = User.objects.all()
+        serializer_class = UserListSerializer(queryset, many=True)
+        return Response(data=serializer_class.data)
+
+
+class ManagerListView(APIView):
+    def get(self,request):
+        queryset = User.objects.filter(rank__name=settings.MANAGER)
+        serializer_class = UserListSerializer(queryset, many=True)
+        return Response(data=serializer_class.data)
+
+
+class XodimView(APIView):
+    def get(self,request):
+        queryset = User.objects.filter(rank__name=settings.EMPLOYEE)
+        serializer_class = UserListSerializer(queryset, many=True)
+        return Response(data=serializer_class.data)
+
+
 class UserCreateView(APIView):
     def get(self,request):
         queryset = User.objects.all()

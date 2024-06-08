@@ -16,4 +16,12 @@ urlpatterns = [
     # user password change by admin
     path('password/change/by/admin/', views.AdminPasswordView.as_view()),
     
+    # barcha ishchilar ro'yxati
+    path('all/employees/', views.XodimListView.as_view()),
+    
+    # barcha manager
+    path('all/managers/', views.ManagerListView.as_view()),
+
+    # barcha xodimlar
+    path('all/xodimlar/', views.XodimView.as_view()),
 ]
