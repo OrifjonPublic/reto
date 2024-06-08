@@ -114,14 +114,30 @@ class TaskMessagesSerializer(serializers.ModelSerializer):
         }
     def create(self, validated_data):
         user = self.context.get('request').user
-        contents = self.context.get('contents')
+        images = self.context.get('images')
+        audios = self.context.get('audios')
+        texts = self.context.get('texts')
         a = None        
-        if contents:
-            for i in contents:
+        if images:
+            for i in images:
+                a = Message.objects.create(
+                    task=validated_data.get('task'),
+                    sender=user,
+                    image = i
+                    )
+        if audios:
+            for i in audios:
                 a = Message.objects.create(
                     task=validated_data.get('task'),
                     sender=user,
                     audio = i
+                    )
+        if texts:
+            for i in texts:
+                a = Message.objects.create(
+                    task=validated_data.get('task'),
+                    sender=user,
+                    text = i
                     )
         return a
 

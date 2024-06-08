@@ -128,6 +128,62 @@ def one_sector_stat(id):
     return sector_stats
 
 
+def all_employees_stat_():
+    users = User.objects.filter(Q(rank__name=settings.EMPLOYEE) | Q(rank__name=settings.MANAGER))
+    statistics = []
+
+    for user in users:
+        all_count = Task.objects.filter(assigned_to=user).count()
+        doing_count = Task.objects.filter(assigned_to=user, status='doing').count()
+        doing_procent =( doing_count / all_count)  * 100 if all_count else 0    
+        finished_count = Task.objects.filter(assigned_to=user, status='finished').count()
+        finished_procent =(finished_count / all_count)  * 100 if all_count else 0
+        missed_count = Task.objects.filter(assigned_to=user, status='missed').count()
+        missed_procent =(missed_count / all_count)  * 100 if all_count else 0
+
+        user_data = {
+            'user': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'doing_count': doing_count,
+            'doing_procent': doing_procent,
+            'finished_count': finished_count,
+            'finished_procent': finished_procent,
+            'missed_count': missed_count,
+            'missed_procent': missed_procent,
+        }
+        statistics.append(user_data)
+    return statistics
+
+
+def one_sector_employees(id):
+    users = User.objects.filter(Q(rank__name=settings.EMPLOYEE)).filter(sector__id=id)
+    statistics = []
+
+    for user in users:
+        all_count = Task.objects.filter(assigned_to=user).count()
+        doing_count = Task.objects.filter(assigned_to=user, status='doing').count()
+        doing_procent =( doing_count / all_count)  * 100 if all_count else 0    
+        finished_count = Task.objects.filter(assigned_to=user, status='finished').count()
+        finished_procent =(finished_count / all_count)  * 100 if all_count else 0
+        missed_count = Task.objects.filter(assigned_to=user, status='missed').count()
+        missed_procent =(missed_count / all_count)  * 100 if all_count else 0
+
+        user_data = {
+            'user': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'doing_count': doing_count,
+            'doing_procent': doing_procent,
+            'finished_count': finished_count,
+            'finished_procent': finished_procent,
+            'missed_count': missed_count,
+            'missed_procent': missed_procent,
+        }
+        statistics.append(user_data)
+    return statistics
+
+
 # bir xodimning statistikasi
 def one_employee_stat(id):
     all_tasks = Task.objects.filter(assigned_to__id=id)

@@ -105,8 +105,10 @@ class CreateTaskMessagesView(ListCreateAPIView):
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        contents = request.data.getlist('message')
-        serializer = TaskMessagesSerializer(data=request.data, context = {'request': request, 'contents': contents})
+        images = request.data.getlist('images')
+        audios = request.data.getlist('audios')
+        texts = request.data.getlist('texts')
+        serializer = TaskMessagesSerializer(data=request.data, context = {'request': request, 'images': images, 'audios': audios, 'texts': texts})
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)

@@ -4,7 +4,8 @@ from user import views
 from .views import (MainStatView, AllSectorStatView, 
                     OneSectorStatView, OneEmployeeStatView,
                     TaskListView, TaskDirectorListView,
-                    TasksOneSectorView, TasksOneXodimByBossView, TasksOneXodimByMAnagerView)
+                    TasksOneSectorView, TasksOneXodimByBossView, TasksOneXodimByMAnagerView,
+                    OneSectorEmployeeStatView, TasksByManagerListView,AllEmployeesStatView)
 
 
 urlpatterns = [
@@ -22,12 +23,16 @@ urlpatterns = [
     
     # all Sector stat
     path('stats/sectors/', AllSectorStatView.as_view()),
+    path('stats/all/employess/', AllEmployeesStatView.as_view()),
     path('stat/sector/one/<int:id>/', OneSectorStatView.as_view()),
+    path('stat/one/sector/employees/<int:id>/', OneSectorEmployeeStatView.as_view()),
     path('stat/one/xodim/<int:id>/', OneEmployeeStatView.as_view()),
+
 
     # Task list
     path('tasks/all/list/', TaskListView.as_view()),
     path('tasks/director/', TaskDirectorListView.as_view()),
+    path('tasks/all/by/manager/', TasksByManagerListView.as_view()),
     path('tasks/one/sector/<int:id>/', TasksOneSectorView.as_view()),
     path('tasks/one/xodim/bydirector/<int:id>/', TasksOneXodimByBossView.as_view()),
     path('tasks/one/xodim/bymanager/<int:id>/', TasksOneXodimByMAnagerView.as_view()),
