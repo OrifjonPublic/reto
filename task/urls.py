@@ -21,6 +21,7 @@ urlpatterns = [
     
     # edit task message
     path('message/edit/<int:id>/', views.EditTaskMessageView.as_view()),
+    path('message/get/<int:id>/', views.TaskMessageGetView.as_view()),
 
     # task finish
     path('finish/<int:id>/', views.TaskFinishView.as_view()),

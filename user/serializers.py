@@ -88,7 +88,7 @@ class UserListSerializer(serializers.ModelSerializer):
     sector = SectorSerializer()
     class Meta:
         model = User
-        fields = ('username', 'rank', 'sector', 'first_name', 'last_name')
+        fields = ('id', 'username', 'rank', 'sector', 'first_name', 'last_name')
 
 
 class UserProfileSerializer(serializers.Serializer):

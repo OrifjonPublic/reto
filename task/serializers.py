@@ -104,6 +104,12 @@ class TaskContentSerializer(serializers.ModelSerializer):
         return a
 
 
+class TaskMessagesListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'task', 'sender', 'image', 'audio', 'text', 'created_at', 'is_read']
+
+
 class TaskMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message

@@ -95,6 +95,13 @@ class EditTaskContentView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
 
+class TaskMessageGetView(APIView):
+    def get(self, request, id):
+        queryset = Message.objects.filter(task__id=id)
+        serializer_class = TaskMessagesListSerializer(queryset, many=True)
+        return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+
+
 class CreateTaskMessagesView(ListCreateAPIView):
     serializer_class = TaskMessagesSerializer
     parser_classes = [MultiPartParser, FileUploadParser, JSONParser]
