@@ -105,9 +105,11 @@ class TaskContentSerializer(serializers.ModelSerializer):
 
 
 class TaskMessagesListSerializer(serializers.ModelSerializer):
+    ism = serializers.CharField(source='sender.first_name')
+    familiya = serializers.CharField(source='sender.last_name')
     class Meta:
         model = Message
-        fields = ['id', 'task', 'sender', 'image', 'audio', 'text', 'created_at', 'is_read']
+        fields = ['id', 'task', 'sender', 'ism', 'familiya', 'image', 'audio', 'text', 'created_at', 'is_read']
 
 
 class TaskMessagesSerializer(serializers.ModelSerializer):
@@ -163,12 +165,15 @@ class TaskListSerializer(serializers.ModelSerializer):
     contents = TaskContentSerializer(many=True, read_only=True)
     assigned_by = serializers.CharField(source='assigned_by.username', read_only=True)
     assigned_to = serializers.CharField(source='assigned_to.username', read_only=True)
+    assigned_to_photo = serializers.CharField(source='assigned_to.user_photo.photo', read_only=True)
+    assigned_by_id = serializers.CharField(source='assigned_by.id', read_only=True)
+    assigned_to_id = serializers.CharField(source='assigned_to.id', read_only=True)
     sector = serializers.CharField(source='assigned_to.sector.name', read_only=True)
 
     class Meta:
         model = Task
         fields = [
-            'id', 'assigned_to', 'assigned_by', 'reason', 'event', 'deadline', 
+            'id', 'assigned_to_id', 'assigned_to', 'assigned_to_photo', 'assigned_by_id','assigned_by', 'reason', 'event', 'deadline', 
             'status', 'privacy', 'created_at', 'updated_at', 'financial_help', 
             'is_active', 'is_changed', 'problem', 'contents', 'all_days', 'remain_days',
             'sector'

@@ -67,18 +67,34 @@ class MyOwnSerializer(TokenObtainPairSerializer):
         token =  super().get_token(user)
 
         token['username'] = user.username
-        token['rank'] = user.rank.name
+        if user.rank:
+            token['rank'] = user.rank.id, user.rank.name
         token['id'] = user.id
         if user.sector:
-            token['sector'] = user.sector.id
+            token['sector'] = user.sector.id, user.sector.name
         return token
     def validate(self, attrs):
         data = super().validate(attrs)
         data['id'] = self.user.id
         data['username'] = self.user.username
-        data['rank'] = self.user.rank.name
+        if self.user.rank:
+            data['rank'] = self.user.rank.id, self.user.rank.name
+            try:
+                if self.user.rank.name == 'manager' and hasattr(self.user, 'manager_profile'):
+                    data['photo'] = self.user.manager_profile.photo.url
+                elif self.user.rank.name == 'xodim' and hasattr(self.user, 'xodim_profile'):
+                    data['photo'] = self.user.xodim_profile.photo.url
+                elif self.user.rank.name == 'admin' and hasattr(self.user, 'admin_profile'):
+                    data['photo'] = self.user.admin_profile.photo.url
+                elif self.user.rank.name == 'director' and hasattr(self.user, 'director_profile'):
+                    data['photo'] = self.user.director_profile.photo.url
+                else:
+                    data['photo'] = '1.png'
+            except AttributeError:
+                data['photo'] = '1.png'
         if self.user.sector:
-            data['sector'] = self.user.sector.id
+            data['sector'] = self.user.sector.id, self.user.sector.name
+        
         return data
 
 

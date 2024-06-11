@@ -59,7 +59,7 @@ class User(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    # user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='%(class)s_profile')
     shior = models.CharField(max_length=195, blank=True, null=True, verbose_name=_('Shior'))
     main_task = models.TextField(null=True, blank=True, verbose_name=_('Asosiy vazifa'))
     birth_date = models.DateField(null=True, blank=True, verbose_name=_('Tugilgan sana'))
@@ -77,12 +77,14 @@ class Profile(models.Model):
 
 
 class Direktor(Profile):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='director_profile')
     class Meta:
         verbose_name = _('Direktor')
         verbose_name_plural = _('Direktorlar')
         # ordering = ('user.sector', 'user.username')
 
 class Admin(Profile):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='admin_profile')
     class Meta:
         verbose_name = _('Admin')
         verbose_name_plural = _('Adminlar')
@@ -91,6 +93,7 @@ class Admin(Profile):
 
 
 class Manager(Profile):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='manager_profile')
     class Meta:
         verbose_name = _('Manager')
         verbose_name_plural = _('Managerlar')
@@ -98,6 +101,7 @@ class Manager(Profile):
 
 
 class Xodim(Profile):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='xodim_profile')
     class Meta:
         verbose_name = _('Xodim')
         verbose_name_plural = _('Xodimlar')
@@ -105,6 +109,7 @@ class Xodim(Profile):
 
 
 class Boshqalar(Profile):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='boshqalar_profile')
     class Meta:
         verbose_name = _('Boshqalar')
         verbose_name_plural = _('Boshqalar')
