@@ -133,22 +133,26 @@ def all_employees_stat_():
     statistics = []
 
     for user in users:
-        all_count = Task.objects.filter(assigned_to=user).count()
-        doing_count = Task.objects.filter(assigned_to=user, status='doing').count()
+        all_count = Task.objects.filter(assigned_to=user).filter(is_active=True).count()
+        doing_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='doing').count()
         doing_procent =( doing_count / all_count)  * 100 if all_count else 0    
-        finished_count = Task.objects.filter(assigned_to=user, status='finished').count()
+        finished_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='finished').count()
         finished_procent =(finished_count / all_count)  * 100 if all_count else 0
-        missed_count = Task.objects.filter(assigned_to=user, status='missed').count()
+        missed_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='missed').count()
         missed_procent =(missed_count / all_count)  * 100 if all_count else 0
-
+        canceled_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='canceled').count()
+        canceled_procent =(canceled_count / all_count)  * 100 if all_count else 0
         user_data = {
             'user': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
+            'total_tasks': all_count,
             'doing_count': doing_count,
             'doing_procent': doing_procent,
             'finished_count': finished_count,
             'finished_procent': finished_procent,
+            'canceled_count': canceled_count,
+            'canceled_procent': canceled_procent,
             'missed_count': missed_count,
             'missed_procent': missed_procent,
         }
