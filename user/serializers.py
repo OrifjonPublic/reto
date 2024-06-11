@@ -65,9 +65,6 @@ class MyOwnSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user) -> Token:
         token =  super().get_token(user)
-        print('-----')
-        print(user.rank)
-        print('------')
         token['username'] = user.username
         if user.rank:
             token['rank'] = user.rank.id, user.rank.name
@@ -79,10 +76,6 @@ class MyOwnSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         data['id'] = self.user.id
         data['username'] = self.user.username
-        print('-----')
-        print(self.user.rank)
-        print(hasattr(self.user, 'xodim_profile'))
-        print('------')
         if self.user.rank:
             data['rank'] = self.user.rank.id, self.user.rank.name
             try:
