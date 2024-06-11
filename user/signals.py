@@ -10,11 +10,11 @@ User = get_user_model()
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.rank is not None:
-            if instance.rank.name=='Direktor':  
+            if instance.rank.name=='direktor':  
                 Direktor.objects.create(user=instance)
-            elif instance.rank.name == 'Manager':  # Replace 'Manager' with appropriate condition
+            elif instance.rank.name == 'manager':  # Replace 'Manager' with appropriate condition
                 Manager.objects.create(user=instance)
-            elif instance.rank.name == 'Xodim':
+            elif instance.rank.name == 'xodim':
                 Xodim.objects.create(user=instance)
             else:
                 Boshqalar.objects.create(user=instance)
@@ -26,4 +26,3 @@ def create_user_profile(sender, instance, created, **kwargs):
             admin_user = Admin.objects.get_or_create(user=instance)
             admin_user.rank = admin
             admin_user.save()
-                
