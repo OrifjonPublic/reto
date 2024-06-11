@@ -11,15 +11,15 @@ from django.conf import settings
 from task.serializers import TaskListSerializer
 from task.models import Task
 from task.statistika import (all_stats_main, all_sector, 
-                             one_sector_stat, one_employee_stat, 
-                             one_sector_employees, all_employees_stat_)
+                        one_sector_stat, one_employee_stat, 
+                        one_sector_employees, all_employees_stat_)
 
 
 class MainStatView(APIView):
     def get(self, request):
         queryset = all_stats_main()
         return Response(data=queryset, status=status.HTTP_200_OK)
-    
+
 class AllSectorStatView(APIView):
     def get(self, request):
         queryset = all_sector()
@@ -30,12 +30,12 @@ class AllEmployeesStatView(APIView):
         queryset = all_employees_stat_()
         return Response(data=queryset, status=status.HTTP_200_OK)
 
-    
+
 class OneSectorStatView(APIView):
     def get(self, request, id):
         queryset = one_sector_stat(id)
         return Response(data=queryset, status=status.HTTP_200_OK)
-    
+
 class OneSectorEmployeeStatView(APIView):
     def get(self, request, id):
         queryset = one_sector_employees(id)
@@ -77,7 +77,7 @@ class TasksOneXodimByBossView(APIView):
         queryset = Task.objects.filter(is_active=True).filter(assigned_to__id=id).exclude(assigned_by__rank__name=settings.MANAGER)
         serializer_class = TaskListSerializer(queryset, many=True)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
-    
+
 
 class TasksOneXodimByMAnagerView(APIView):
     def get(self, request, id):
