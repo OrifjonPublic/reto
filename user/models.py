@@ -48,7 +48,7 @@ class Position(models.Model):
 class User(AbstractUser):
     rank = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Lavozim'))
     sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Bo‘lim'))
-
+    photo = models.ImageField(upload_to='user/', default='1.png', null=True, blank=True)
     def __str__(self) -> str:
         return self.username 
 

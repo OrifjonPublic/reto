@@ -21,7 +21,7 @@ class SectorSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'rank', 'sector', 'password')
+        fields = ('username', 'rank', 'sector', 'password', 'photo')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -44,6 +44,8 @@ class UserSerializer(serializers.ModelSerializer):
             rank=validated_data.get('rank', None),
             sector=validated_data.get('sector', None),
         )        
+        if validated_data.get('photo'):
+            user.photo = validated_data.get('photo')
         user.set_password(validated_data['password'])
         user.save()
         return user
@@ -68,6 +70,7 @@ class MyOwnSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         if user.rank:
             token['rank'] = user.rank.id, user.rank.name
+            token['photo'] = user.photo.url
         token['id'] = user.id
         if user.sector:
             token['sector'] = user.sector.id, user.sector.name
@@ -78,19 +81,20 @@ class MyOwnSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         if self.user.rank:
             data['rank'] = self.user.rank.id, self.user.rank.name
-            try:
-                if self.user.rank.name == 'manager' and hasattr(self.user, 'manager_profile'):
-                    data['photo'] = self.user.manager_profile.photo.url
-                elif self.user.rank.name == 'xodim' and hasattr(self.user, 'xodim_profile'):
-                    data['photo'] = self.user.xodim_profile.photo.url
-                elif self.user.rank.name == 'admin' and hasattr(self.user, 'admin_profile'):
-                    data['photo'] = self.user.admin_profile.photo.url
-                elif self.user.rank.name == 'director' and hasattr(self.user, 'director_profile'):
-                    data['photo'] = self.user.director_profile.photo.url
-                else:
-                    data['photo'] = '1.png'
-            except AttributeError:
-                data['photo'] = '1.png'
+            data['photo'] = self.user.photo.url
+            # try:
+            #     if self.user.rank.name == 'manager' and hasattr(self.user, 'manager_profile'):
+            #         data['photo'] = self.user.manager_profile.photo.url
+            #     elif self.user.rank.name == 'xodim' and hasattr(self.user, 'xodim_profile'):
+            #         data['photo'] = self.user.xodim_profile.photo.url
+            #     elif self.user.rank.name == 'admin' and hasattr(self.user, 'admin_profile'):
+            #         data['photo'] = self.user.admin_profile.photo.url
+            #     elif self.user.rank.name == 'director' and hasattr(self.user, 'director_profile'):
+            #         data['photo'] = self.user.director_profile.photo.url
+            #     else:
+            #         data['photo'] = '1.png'
+            # except AttributeError:
+            #     data['photo'] = '1.png'
         if self.user.sector:
             data['sector'] = self.user.sector.id, self.user.sector.name
         
@@ -103,7 +107,7 @@ class UserListSerializer(serializers.ModelSerializer):
     sector = SectorSerializer()
     class Meta:
         model = User
-        fields = ('id', 'username', 'rank', 'sector', 'first_name', 'last_name')
+        fields = ('id', 'username', 'photo', 'rank', 'sector', 'first_name', 'last_name')
 
 
 class UserProfileSerializer(serializers.Serializer):
@@ -137,7 +141,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('birth_date'):
             profile.birth_date = validated_data.get('birth_date')
         if validated_data.get('photo') and validated_data.get('photo').endswith(('PNG', 'png', 'JPEG', 'jpg')):
-            profile.photo = validated_data.get('photo')
+            user.photo = validated_data.get('photo', user.photo)
         user.save()
         profile.save()
         return user

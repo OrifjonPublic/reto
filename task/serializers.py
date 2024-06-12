@@ -107,10 +107,10 @@ class TaskContentSerializer(serializers.ModelSerializer):
 class TaskMessagesListSerializer(serializers.ModelSerializer):
     ism = serializers.CharField(source='sender.first_name')
     familiya = serializers.CharField(source='sender.last_name')
-        
+    photo = serializers.ImageField(source='sender.photo.url')
     class Meta:
         model = Message
-        fields = ['id', 'task', 'sender', 'ism', 'familiya', 'image', 'audio', 'text', 'created_at', 'is_read']
+        fields = ['id', 'task', 'sender', 'ism', 'familiya', 'photo','image', 'audio', 'text', 'created_at', 'is_read']
 
 
 class TaskMessagesSerializer(serializers.ModelSerializer):
@@ -181,14 +181,16 @@ class TaskListSerializer(serializers.ModelSerializer):
         ]
     def get_photo(self, obj):
         # Assuming 'sender' is a generic relation to Director, Manager, Xodim
-        if hasattr(obj.assigned_to, 'manager_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
-            return obj.assigned_to.manager_profile.photo.url if obj.assigned_to.manager_profile.photo else None
-        elif hasattr(obj.assigned_to, 'xodim_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
-            return obj.assigned_to.xodim_profile.photo.url if obj.assigned_to.xodim_profile.photo else None
-        elif hasattr(obj.assigned_to, 'director_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
-            return obj.assigned_to.director_profile.photo.url if obj.assigned_to.director_profile.photo else None
-        elif hasattr(obj.assigned_to, 'admin_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
-            return obj.assigned_to.admin_profile.photo.url if obj.assigned_to.admin_profile.photo else None
-        else:
-            return obj.assigned_to.boshqalar_profile.photo.url if obj.assigned_to.boshqalar_profile.photo else None
+        # if hasattr(obj.assigned_to, 'manager_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
+        #     return obj.assigned_to.manager_profile.photo.url if obj.assigned_to.manager_profile.photo else None
+        # elif hasattr(obj.assigned_to, 'xodim_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
+        #     return obj.assigned_to.xodim_profile.photo.url if obj.assigned_to.xodim_profile.photo else None
+        # elif hasattr(obj.assigned_to, 'director_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
+        #     return obj.assigned_to.director_profile.photo.url if obj.assigned_to.director_profile.photo else None
+        # elif hasattr(obj.assigned_to, 'admin_profile'):  # Assuming 'user' is the related_name in Director, Manager, Xodim
+        #     return obj.assigned_to.admin_profile.photo.url if obj.assigned_to.admin_profile.photo else None
+        # else:
+        #     return obj.assigned_to.boshqalar_profile.photo.url if obj.assigned_to.boshqalar_profile.photo else None
+        if obj.assigned_to.photo:
+            return obj.assigned_to.photo.url
         return None

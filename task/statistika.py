@@ -143,6 +143,7 @@ def all_employees_stat_():
         canceled_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='canceled').count()
         canceled_procent =(canceled_count / all_count)  * 100 if all_count else 0
         user_data = {
+            'photo': user.photo.url,
             'user': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -175,6 +176,7 @@ def one_sector_employees(id):
         canceled_count = Task.objects.filter(is_active=True).filter(assigned_to=user, status='canceled').count()
         canceled_procent =(canceled_count / all_count)  * 100 if all_count else 0
         user_data = {
+            'photo': user.photo.url,
             'user': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
