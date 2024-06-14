@@ -6,6 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from .models import *
 
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('id', 'name', 'address', 'bio', 'image')
+
+
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position

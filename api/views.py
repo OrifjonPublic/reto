@@ -13,6 +13,21 @@ from task.models import Task
 from task.statistika import (all_stats_main, all_sector, 
                         one_sector_stat, one_employee_stat, 
                         one_sector_employees, all_employees_stat_)
+from user.serializers import CompanySerializer
+from user.models import Company
+
+
+class LogoView(APIView):
+    def get(self, request):
+        logos = Company.objects.all()
+        ser = CompanySerializer(ser, many=True)
+        return Response(data=ser.data, status=status.HTTP_200_OK)
+    def post(self, request):
+        serializer = CompanySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MainStatView(APIView):

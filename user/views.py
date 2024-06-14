@@ -61,6 +61,32 @@ class UserOwnEditView(APIView):
     request_body=UserProfileSerializer,
     responses={201: UserProfileSerializer, 400: "Bad Request"}
     )
+    def get(self, request):
+        user = User.objects.filter(id=request.user.id)
+        if user.rank == settings.EMPLOYEE:
+            x = Xodim.objects.get(user=user)
+        elif user.rank == settings.MANAGER:
+            x = Manager.objects.get(user=user)
+        elif user.rank == settings.BOSS:
+            x = Direktor.objects.get(user=user)
+        elif user.rank == settings.ASSIST:
+            x = Admin.objects.get(user=user)
+        else:
+            x = Boshqalar.objects.get(user=user)
+        d = {
+            'first_name': x.user.first_name,
+            'last_name': x.user.last_name,
+            'photo': x.user.photo.url,
+            'username': x.user.username,
+            'rank': x.user.rank.name,
+            'id': x.user.id,
+            'shior': x.shior,
+            'main_task': x.main_task,
+            'birth_date': x.birth_date,
+            'phone_number': x.phone_number,
+        }
+        return Response(data=d)
+
     def post(self, request):
         serializer = UserProfileSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():

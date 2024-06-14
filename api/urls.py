@@ -5,10 +5,13 @@ from .views import (MainStatView, AllSectorStatView,
                     OneSectorStatView, OneEmployeeStatView,
                     TaskListView, TaskDirectorListView,
                     TasksOneSectorView, TasksOneXodimByBossView, TasksOneXodimByMAnagerView,
-                    OneSectorEmployeeStatView, TasksByManagerListView,AllEmployeesStatView)
+                    OneSectorEmployeeStatView, TasksByManagerListView,AllEmployeesStatView,
+                    LogoView)
 
 
 urlpatterns = [
+    #Logo
+    path('logo/create/', LogoView.as_view(), name='logo'),
 
     # lavozim
     path('create/rank/', views.PositionCreateView.as_view()),
