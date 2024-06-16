@@ -20,7 +20,7 @@ from user.models import Company
 class LogoView(APIView):
     def get(self, request):
         logos = Company.objects.all()
-        ser = CompanySerializer(ser, many=True)
+        ser = CompanySerializer(logos, many=True)
         return Response(data=ser.data, status=status.HTTP_200_OK)
     def post(self, request):
         serializer = CompanySerializer(data=request.data)

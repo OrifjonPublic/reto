@@ -126,13 +126,13 @@ class UserProfileSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context.get('request').user
-        if user.rank == settings.EMPLOYEE:
+        if user.rank.name == settings.EMPLOYEE:
             profile = Xodim.objects.get_or_create(user=user)[0]
-        elif user.rank == settings.MANAGER:
+        elif user.rank.name == settings.MANAGER:
             profile = Manager.objects.get_or_create(user=user)[0]
         elif user.rank == settings.BOSS:
             profile = Direktor.objects.get_or_create(user=user)[0]
-        elif user.rank == settings.ASSIST:
+        elif user.rank.name == settings.ASSIST:
             profile = Admin.objects.get_or_create(user=user)[0]
         else:
             profile = Boshqalar.objects.get_or_create(user=user)[0]

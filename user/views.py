@@ -62,14 +62,15 @@ class UserOwnEditView(APIView):
     responses={201: UserProfileSerializer, 400: "Bad Request"}
     )
     def get(self, request):
-        user = User.objects.filter(id=request.user.id)
-        if user.rank == settings.EMPLOYEE:
+        # user = User.objects.filter(id=request.user.id)
+        user = request.user
+        if user.rank.name == settings.EMPLOYEE:
             x = Xodim.objects.get(user=user)
-        elif user.rank == settings.MANAGER:
+        elif user.rank.name == settings.MANAGER:
             x = Manager.objects.get(user=user)
-        elif user.rank == settings.BOSS:
+        elif user.rank.name == settings.BOSS:
             x = Direktor.objects.get(user=user)
-        elif user.rank == settings.ASSIST:
+        elif user.rank.name == settings.ASSIST:
             x = Admin.objects.get(user=user)
         else:
             x = Boshqalar.objects.get(user=user)

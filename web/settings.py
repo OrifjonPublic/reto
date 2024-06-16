@@ -42,6 +42,18 @@ INSTALLED_APPS = [
 from datetime import timedelta
 
 REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',  # For unauthenticated users
+        'rest_framework.throttling.UserRateThrottle',  # For authenticated users
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',  # Allow 100 requests per day for unauthenticated users
+        'user': '1000/day'  # Allow 1000 requests per day for authenticated users
+    }
+}
+
+
+REST_FRAMEWORK = {
 
         'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework.authentication.SessionAuthentication',
