@@ -10,7 +10,7 @@ User = get_user_model()
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.rank is not None:
-            if instance.rank.name=='direktor':  
+            if instance.rank.name=='director':  
                 Direktor.objects.create(user=instance)
             elif instance.rank.name == 'manager':  # Replace 'Manager' with appropriate condition
                 Manager.objects.create(user=instance)
@@ -22,7 +22,7 @@ def create_user_profile(sender, instance, created, **kwargs):
                 Boshqalar.objects.create(user=instance)
         else:
             admin = Position.objects.get_or_create(name='admin')
-            Position.objects.get_or_create(name='direktor')
+            Position.objects.get_or_create(name='director')
             Position.objects.get_or_create(name='xodim')
             Position.objects.get_or_create(name='manager')
             admin_user = Admin.objects.get_or_create(user=instance)[0]
