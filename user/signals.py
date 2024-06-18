@@ -21,7 +21,7 @@ def create_user_profile(sender, instance, created, **kwargs):
             else:
                 Boshqalar.objects.create(user=instance)
         else:
-            admin = Position.objects.get_or_create(name='admin')
+            admin = Position.objects.get_or_create(name='admin')[0]
             Position.objects.get_or_create(name='director')
             Position.objects.get_or_create(name='xodim')
             Position.objects.get_or_create(name='manager')
