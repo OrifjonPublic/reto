@@ -16,6 +16,8 @@ def create_user_profile(sender, instance, created, **kwargs):
                 Manager.objects.create(user=instance)
             elif instance.rank.name == 'xodim':
                 Xodim.objects.create(user=instance)
+            elif instance.rank.name == 'admin':
+                Admin.objects.create(user=instance)
             else:
                 Boshqalar.objects.create(user=instance)
         else:
