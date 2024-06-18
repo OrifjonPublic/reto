@@ -23,6 +23,6 @@ def create_user_profile(sender, instance, created, **kwargs):
             Position.objects.get_or_create(name='direktor')
             Position.objects.get_or_create(name='xodim')
             Position.objects.get_or_create(name='manager')
-            admin_user = Admin.objects.get_or_create(user=instance)
+            admin_user = Admin.objects.get_or_create(user=instance)[0]
             admin_user.rank = admin
             admin_user.save()
