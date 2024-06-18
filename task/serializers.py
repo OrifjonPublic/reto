@@ -170,6 +170,10 @@ class TaskListSerializer(serializers.ModelSerializer):
     assigned_to_id = serializers.CharField(source='assigned_to.id', read_only=True)
     sector = serializers.CharField(source='assigned_to.sector.name', read_only=True)
     photo = serializers.SerializerMethodField()
+    audio = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
+    number_unread_messages = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
@@ -177,7 +181,7 @@ class TaskListSerializer(serializers.ModelSerializer):
             'id', 'assigned_to_id', 'assigned_to', 'photo', 'assigned_by_id','assigned_by', 'reason', 'event', 'deadline', 
             'status', 'privacy', 'created_at', 'updated_at', 'financial_help', 
             'is_active', 'is_changed', 'problem', 'contents', 'all_days', 'remain_days',
-            'sector'
+            'sector', 'text', 'image', 'audio', 'number_unread_messages'
         ]
     def get_photo(self, obj):
         # Assuming 'sender' is a generic relation to Director, Manager, Xodim
@@ -194,3 +198,24 @@ class TaskListSerializer(serializers.ModelSerializer):
         if obj.assigned_to.photo:
             return obj.assigned_to.photo.url
         return None
+    def get_audio(self, obj):
+        audio = []
+        if obj.contents.filter(content_type='audio').exists():
+            for i in obj.contents.filter(content_type='audio'):
+                audio.append(i.audio.url)
+        return audio
+    def get_image(self, obj):
+        image = []
+        if obj.contents.filter(content_type='image').exists():
+            for i in obj.contents.filter(content_type='image'):
+                image.append(i.image.url)
+        return image
+    def get_text(self, obj):
+        text = []
+        if obj.contents.filter(content_type='text').exists():
+            for i in obj.contents.filter(content_type='text'):
+                text.append(i.text)
+        return text 
+    
+    def get_number_unread_messages(self, obj):
+        return Message.objects.filter(task=obj, is_read=False).count()
