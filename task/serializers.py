@@ -163,7 +163,7 @@ class TaskListContentSerializer(serializers.ModelSerializer):
         fields = ['text', 'image', 'audio',]
 
 class TaskListSerializer(serializers.ModelSerializer):
-    contents = TaskContentSerializer(many=True, read_only=True)
+    # contents = TaskContentSerializer(many=True, read_only=True)
     assigned_by = serializers.CharField(source='assigned_by.username', read_only=True)
     assigned_to = serializers.CharField(source='assigned_to.username', read_only=True)
     assigned_by_id = serializers.CharField(source='assigned_by.id', read_only=True)
@@ -180,7 +180,7 @@ class TaskListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'assigned_to_id', 'assigned_to', 'photo', 'assigned_by_id','assigned_by', 'reason', 'event', 'deadline', 
             'status', 'privacy', 'created_at', 'updated_at', 'financial_help', 
-            'is_active', 'is_changed', 'problem', 'contents', 'all_days', 'remain_days',
+            'is_active', 'is_changed', 'problem', 'all_days', 'remain_days',
             'sector', 'text', 'image', 'audio', 'number_unread_messages'
         ]
     def get_photo(self, obj):
