@@ -6,6 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from .models import *
 
 
+class UserNotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notes
+        fields = ('id', 'title', 'content', 'user', 'label')
+
+
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -214,3 +220,4 @@ class AdminPasswordSerializer(serializers.Serializer):
             else:
                 return serializers.ValidationError(_('username topilmadi yoki yangi parol kiritilmadi :)'))
         return attrs
+

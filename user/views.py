@@ -14,6 +14,25 @@ from user.models import *
 from user.serializers import *
 
 
+class OneNoteView(RetrieveUpdateDestroyAPIView):
+    queryset = Notes.objects.all()
+    serializer_class = UserNotesSerializer
+    lookup_field = 'id'
+
+
+class UserNotesView(APIView):
+    def get(self,request):
+        queryset = Notes.objects.filter(user=request.user)
+        serializer_class = UserNotesSerializer(queryset, many=True)
+        return Response(data=serializer_class.data)
+    def post(self, request):
+        request.data['user'] = request.user
+        serializer = UserNotesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data)
+        return Response(data=serializer.errors)
+
 class XodimListView(APIView):
     def get(self,request):
         queryset = User.objects.all()

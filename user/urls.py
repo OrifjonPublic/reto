@@ -24,4 +24,7 @@ urlpatterns = [
 
     # barcha xodimlar
     path('all/xodimlar/', views.XodimView.as_view()),
+
+    path('create/notes/', views.UserNotesView.as_view()),
+    path('get/one/note/<int:id>/', views.OneNoteView.as_view()),
 ]
