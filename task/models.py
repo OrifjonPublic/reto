@@ -35,7 +35,7 @@ class Task(models.Model):
     sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
 
     def __str__(self):
-        return f"{self.assigned_by.username} gave a task to "
+        return f"Task was given to {self.assigned_to.username}"
 
     @property
     def all_days(self):
