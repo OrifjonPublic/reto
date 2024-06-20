@@ -9,7 +9,7 @@ from .models import *
 class UserNotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notes
-        fields = ('id', 'title', 'content', 'user', 'label')
+        fields = ('id', 'title', 'content', 'user', 'label', 'deadline')
 
 
 class CompanySerializer(serializers.ModelSerializer):
