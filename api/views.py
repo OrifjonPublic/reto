@@ -7,6 +7,8 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.db.models import Q
+
 from django.conf import settings
 from task.serializers import TaskListSerializer
 from task.models import Task
@@ -65,12 +67,12 @@ class OneEmployeeStatView(APIView):
 
 # LIST views
 class TaskListView(ListAPIView):
-    queryset = Task.objects.filter(is_active=True).exclude(assigned_by__rank__name=settings.MANAGER)
+    queryset = Task.objects.filter(is_active=True).exclude(Q(assigned_by__rank__name=settings.MANAGER) | Q(assigned_by__isnull=True))
     serializer_class = TaskListSerializer
 
 
 class TaskDirectorListView(ListAPIView):
-    queryset = Task.objects.filter(is_active=True).filter(assigned_by__rank__name=settings.BOSS)
+    queryset = Task.objects.filter(is_active=True).filter(Q(assigned_by__rank__name=settings.BOSS) | Q(assigned_by__isnull=True))
     serializer_class = TaskListSerializer
 
 
