@@ -67,12 +67,12 @@ class OneEmployeeStatView(APIView):
 
 # LIST views
 class TaskListView(ListAPIView):
-    queryset = Task.objects.filter(is_active=True).exclude(Q(assigned_by__rank__name=settings.MANAGER) | Q(assigned_by__isnull=True))
+    queryset = Task.objects.filter(is_active=True).exclude(Q(assigned_by__rank__name=settings.MANAGER))
     serializer_class = TaskListSerializer
 
 
 class TaskDirectorListView(ListAPIView):
-    queryset = Task.objects.filter(is_active=True).filter(Q(assigned_by__rank__name=settings.BOSS) | Q(assigned_by__isnull=True))
+    queryset = Task.objects.filter(is_active=True).filter(Q(assigned_by__rank__name=settings.BOSS))
     serializer_class = TaskListSerializer
 
 
