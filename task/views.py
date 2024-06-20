@@ -14,17 +14,17 @@ from .serializers import *
 from .change_task import change_user_sector
 
 
-class TaskChangeByUser(APIView):
-    """
-    :parametr -> ids : [1,2,4] , id lar listi
-    """
-    def post(self, request):
-        ids = request.data.getlist('id')
-        news_sector = request.data.get('new_sector')
-        news_sector_obj=None
-        if news_sector:
-            news_sector_obj = Sector.objects.get(id=news_sector)
-        
+# class TaskChangeByUser(APIView):
+#     """
+#     :parametr -> ids : [1,2,4] , id lar listi
+#     """
+#     def post(self, request):
+#         ids = request.data.getlist('id')
+#         news_sector = request.data.get('new_sector')
+#         news_sector_obj=None
+#         if news_sector:
+#             news_sector_obj = Sector.objects.get(id=news_sector)
+
 
 
 class TaskArchiveListView(APIView):
