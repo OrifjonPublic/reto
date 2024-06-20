@@ -31,11 +31,15 @@ class TaskSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if self.request and not self.request._authenticate:
             raise serializers.ValidationError('user must be log in :)')
-        if self.request == data.get('assigned_to'):
+        if self.request.user == data.get('assigned_to'):
             raise serializers.ValidationError('Bir kishi bir vaqtda topshiriq beruvchi va bajaruvchi bola olmaydi')
         return data
     
     def create(self, validated_data):
+        if not validated_data.get('assigned_to'):
+            raise serializers.ValidationError('Bajaruvchi kiritilmagan')
+        if not self.context.get('request').user.username:
+            raise serializers.ValidationError('Topshiriq beruvchi kiritilmagan')
         user = self.request.user
         print('---------------')
         print(self)
