@@ -200,8 +200,9 @@ class TaskListSerializer(serializers.ModelSerializer):
         #     return obj.assigned_to.admin_profile.photo.url if obj.assigned_to.admin_profile.photo else None
         # else:
         #     return obj.assigned_to.boshqalar_profile.photo.url if obj.assigned_to.boshqalar_profile.photo else None
-        if obj.assigned_to.photo:
-            return obj.assigned_to.photo.url
+        if obj.assigned_to:
+            if obj.assigned_to.photo:
+                return obj.assigned_to.photo.url
         return None
     def get_audio(self, obj):
         audio = []
