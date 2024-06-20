@@ -129,6 +129,7 @@ class UserProfileSerializer(serializers.Serializer):
     main_task = serializers.CharField(required=False)
     birth_date = serializers.DateField(required=False)
     photo = serializers.ImageField(required=False)
+    username = serializers.CharField(required=False)
 
     def create(self, validated_data):
         user = self.context.get('request').user
@@ -144,6 +145,10 @@ class UserProfileSerializer(serializers.Serializer):
             profile = Boshqalar.objects.get_or_create(user=user)[0]
         if validated_data.get('first_name'):
             user.first_name = validated_data.get('first_name')
+        if validated_data.get('username'):
+            user.username = validated_data.get('username')
+        if validated_data.get('phone_number'):
+            user.phone_number = validated_data.get('phone_number')
         if validated_data.get('last_name'):
             user.last_name = validated_data.get('last_name')
         if validated_data.get('shior'):
@@ -152,7 +157,7 @@ class UserProfileSerializer(serializers.Serializer):
             profile.main_task = validated_data.get('main_task')
         if validated_data.get('birth_date'):
             profile.birth_date = validated_data.get('birth_date')
-        if validated_data.get('photo') and validated_data.get('photo').endswith(('PNG', 'png', 'JPEG', 'jpg')):
+        if validated_data.get('photo'):
             user.photo = validated_data.get('photo', user.photo)
         user.save()
         profile.save()
@@ -175,15 +180,17 @@ class UserProfileSerializer(serializers.Serializer):
             user.first_name = validated_data.get('first_name')
         if validated_data.get('last_name'):
             user.last_name = validated_data.get('last_name')
-        # if validated_data.get('first_name'):
-        #     user.first_name = validated_data.get('first_name')
+        if validated_data.get('username'):
+            user.username = validated_data.get('username')
+        if validated_data.get('phone_number'):
+            user.phone_number = validated_data.get('phone_number')
         if validated_data.get('shior'):
             profile.shior = validated_data.get('shior')
         if validated_data.get('main_task'):
             profile.main_task = validated_data.get('main_task')
         if validated_data.get('birth_date'):
             profile.birth_date = validated_data.get('birth_date')
-        if validated_data.get('photo') and validated_data.get('photo').endswith(('PNG', 'png', 'JPEG', 'jpg')):
+        if validated_data.get('photo'):
             profile.photo = validated_data.get('photo')
         
         user.save()
