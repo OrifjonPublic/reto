@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from datetime import datetime
+from user.models import Sector
 
 User = get_user_model()
 
@@ -31,9 +32,10 @@ class Task(models.Model):
     is_active = models.BooleanField(default=True)
     is_changed = models.BooleanField(default=False)
     problem = models.TextField(null=True, blank=True)
+    sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
 
     def __str__(self):
-        return f"{self.assigned_by.username} gave a task to {self.assigned_to.username}"
+        return f"{self.assigned_by.username} gave a task to "
 
     @property
     def all_days(self):
@@ -46,6 +48,15 @@ class Task(models.Model):
         if self.deadline:
             return (self.deadline - datetime.now().date()).days
         return None
+
+
+class TaskHistory(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='history')
+    changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    old_sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, related_name='old_tasks')
+    new_sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True, related_name='new_tasks')
+    change_date = models.DateTimeField(auto_now_add=True)
+
 
 
 class TaskContent(models.Model):

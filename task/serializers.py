@@ -39,6 +39,7 @@ class TaskSerializer(serializers.ModelSerializer):
         user = self.request.user
         print('---------------')
         print(self)
+        user = self.context.get('request').user
         task = Task.objects.create(assigned_by=user,**validated_data)
         images = self.context.get('images')
         # audios = self.getlist('audios')
