@@ -26,7 +26,7 @@ class UserNotesView(APIView):
         serializer_class = UserNotesSerializer(queryset, many=True)
         return Response(data=serializer_class.data)
     def post(self, request):
-        request.data['user'] = request.user
+        request.data['user'] = request.user.id
         serializer = UserNotesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
