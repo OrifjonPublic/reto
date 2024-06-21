@@ -36,12 +36,14 @@ class TaskArchiveListView(APIView):
         serializer_class = TaskListSerializer(queryset, many=True)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
     def post(self, request):
-        ids = request.data.getlist('id')
+        ids = request.data.get('id')
         if ids:
-            for i in ids:
-                t = Task.objects.get(id=i)
+            t = Task.objects.get(id=ids)
+            if t.is_active:
                 t.is_active=False 
-                t.save()
+            else:
+                t.is_active = True
+            t.save()
             return Response({
                 'message': 'Arxivlandi'
             })
