@@ -130,6 +130,7 @@ class UserProfileSerializer(serializers.Serializer):
     birth_date = serializers.DateField(required=False)
     photo = serializers.ImageField(required=False)
     username = serializers.CharField(required=False)
+    phone_number = serializers.CharField(required=False)
 
     def create(self, validated_data):
         user = self.context.get('request').user
