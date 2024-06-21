@@ -149,7 +149,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('username'):
             user.username = validated_data.get('username')
         if validated_data.get('phone_number'):
-            user.phone_number = validated_data.get('phone_number')
+            profile.phone_number = validated_data.get('phone_number')
         if validated_data.get('last_name'):
             user.last_name = validated_data.get('last_name')
         if validated_data.get('shior'):
@@ -184,7 +184,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('username'):
             user.username = validated_data.get('username')
         if validated_data.get('phone_number'):
-            user.phone_number = validated_data.get('phone_number')
+            profile.phone_number = validated_data.get('phone_number')
         if validated_data.get('shior'):
             profile.shior = validated_data.get('shior')
         if validated_data.get('main_task'):
