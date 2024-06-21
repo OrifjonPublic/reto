@@ -111,7 +111,7 @@ class EditTaskContentView(RetrieveUpdateDestroyAPIView):
 
 class TaskMessageGetView(APIView):
     def get(self, request, id):
-        queryset = Message.objects.filter(task__id=id).exclude(user=request.user)
+        queryset = Message.objects.filter(task__id=id).exclude(sender=request.user)
         # making is_read field to True each False   
         queryset.update(is_read=True)
         serializer_class = TaskMessagesListSerializer(queryset, many=True)
