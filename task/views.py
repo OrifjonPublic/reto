@@ -36,7 +36,7 @@ class TaskArchiveListView(APIView):
         serializer_class = TaskListSerializer(queryset, many=True)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
     def post(self, request):
-        ids = request.data.getlist('ids')
+        ids = request.data.get('ids')
         if ids:
             t = Task.objects.get(id=ids[0])
             if t.is_active:
