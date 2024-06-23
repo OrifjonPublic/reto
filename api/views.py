@@ -79,29 +79,33 @@ class TaskDirectorListView(ListAPIView):
     queryset = Task.objects.filter(is_active=True).filter(Q(assigned_by__rank__name=settings.BOSS))
     serializer_class = TaskListSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class TasksByManagerListView(APIView):
     def get(self, request):
         queryset = Task.objects.filter(is_active=True).filter(assigned_by=request.user).filter(assigned_by__rank__name=settings.MANAGER)
-        serializer_class = TaskListSerializer(queryset, many=True)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request':request})
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
 
 class TasksOneSectorView(APIView):
     def get(self, request, id):
         queryset = Task.objects.filter(is_active=True).filter(assigned_to__sector__id=id)
-        serializer_class = TaskListSerializer(queryset, many=True)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request':request})
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
 class TasksOneXodimByBossView(APIView):
     def get(self, request, id):
         queryset = Task.objects.filter(is_active=True).filter(assigned_to__id=id).exclude(assigned_by__rank__name=settings.MANAGER)
-        serializer_class = TaskListSerializer(queryset, many=True)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request':request})
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
 
 class TasksOneXodimByMAnagerView(APIView):
     def get(self, request, id):
         queryset = Task.objects.filter(is_active=True).filter(assigned_to__id=id).filter(assigned_by__rank__name=settings.MANAGER)
-        serializer_class = TaskListSerializer(queryset, many=True)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request':request})
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
