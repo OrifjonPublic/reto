@@ -70,6 +70,10 @@ class TaskListView(ListAPIView):
     queryset = Task.objects.filter(is_active=True).exclude(Q(assigned_by__rank__name=settings.MANAGER))
     serializer_class = TaskListSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class TaskDirectorListView(ListAPIView):
     queryset = Task.objects.filter(is_active=True).filter(Q(assigned_by__rank__name=settings.BOSS))

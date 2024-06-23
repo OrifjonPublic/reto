@@ -224,4 +224,5 @@ class TaskListSerializer(serializers.ModelSerializer):
         return text 
     
     def get_number_unread_messages(self, obj):
-        return Message.objects.filter(task=obj, is_read=False).count()
+        user = self.context.get('request').user
+        return Message.objects.filter(task=obj).filter(is_read=False).exclude(sender=user).count()
