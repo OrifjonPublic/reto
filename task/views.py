@@ -116,6 +116,7 @@ class TaskMessageGetView(APIView):
         queryset = Message.objects.filter(task__id=id).exclude(sender=request.user)
         # making is_read field to True each False   
         queryset.update(is_read=True)
+        queryset = Message.objects.filter(task__id=id)
         serializer_class = TaskMessagesListSerializer(queryset, many=True)
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
 
