@@ -67,6 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.rank = validated_data.get('rank', instance.rank)
         instance.sector = validated_data.get('sector', instance.sector)
+        instance.photo = validated_data.get('photo', instance.photo)
 
         # if 'password' in validated_data:
         #     instance.set_password(validated_data['password'])
