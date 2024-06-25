@@ -68,7 +68,7 @@ class UserCreateView(APIView):
 
 class UserEditView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
     lookup_field = 'id'
 
 

@@ -193,7 +193,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('birth_date'):
             profile.birth_date = validated_data.get('birth_date')
         if validated_data.get('photo'):
-            profile.photo = validated_data.get('photo')
+            user.photo = validated_data.get('photo')
         
         user.save()
         profile.save()
