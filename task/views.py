@@ -33,7 +33,7 @@ class TaskArchiveListView(APIView):
     """
     def get(self,request):
         queryset = Task.objects.filter(is_active=False)
-        serializer_class = TaskListSerializer(queryset, many=True)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request': request})
         return Response(data=serializer_class.data, status=status.HTTP_200_OK)
     def post(self, request):
         ids = request.data.get('ids')
