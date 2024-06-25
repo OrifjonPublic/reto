@@ -28,5 +28,6 @@ urlpatterns = [
 
     # task arxivlash
     path('arxivlash/', views.TaskArchiveListView.as_view()),
+    path('arxivlash/xodim/<int:id>/', views.TaskXodimArxivListView.as_view()),
 ]
 

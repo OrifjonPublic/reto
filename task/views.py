@@ -26,6 +26,12 @@ from .change_task import change_user_sector
 #             news_sector_obj = Sector.objects.get(id=news_sector)
 
 
+class TaskXodimArxivListView(APIView):
+    def get(self, request, id):
+        queryset = Task.objects.filter(assigned_to__id=id)
+        serializer_class = TaskListSerializer(queryset, many=True, context={'request': request})
+        return Response(data=serializer_class.data, status=status.HTTP_200_OK)
+
 
 class TaskArchiveListView(APIView):
     """
