@@ -71,6 +71,11 @@ class UserEditView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
     lookup_field = 'id'
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 class UserOwnEditView(APIView):
     serializer_class = UserProfileSerializer
