@@ -169,7 +169,7 @@ class UserProfileSerializer(serializers.Serializer):
         return user
     
     def update(self, instance, validated_data):
-        user = self.context.get('request').user
+        user = instance
         if user.rank == settings.EMPLOYEE:
             profile = Xodim.objects.get_or_create(user=user)[0]
         elif user.rank == settings.MANAGER:
