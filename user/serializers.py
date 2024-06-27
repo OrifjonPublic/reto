@@ -181,7 +181,7 @@ class UserProfileSerializer(serializers.Serializer):
         else:
             profile = Boshqalar.objects.get_or_create(user=user)[0]
         if validated_data.get('sector'):
-            user.sector = validated_data.get('sector')
+            user.sector = Sector.objects.get(id=validated_data.get('sector'))
         if validated_data.get('first_name'):
             user.first_name = validated_data.get('first_name')
         if validated_data.get('last_name'):
