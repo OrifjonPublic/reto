@@ -132,6 +132,7 @@ class UserProfileSerializer(serializers.Serializer):
     photo = serializers.ImageField(required=False)
     username = serializers.CharField(required=False)
     phone_number = serializers.CharField(required=False)
+    sector = serializers.CharField(required=False)
 
     def create(self, validated_data):
         user = self.context.get('request').user
@@ -153,6 +154,8 @@ class UserProfileSerializer(serializers.Serializer):
             profile.phone_number = validated_data.get('phone_number')
         if validated_data.get('last_name'):
             user.last_name = validated_data.get('last_name')
+        if validated_data.get('sector'):
+            user.sector = validated_data.get('sector')
         if validated_data.get('shior'):
             profile.shior = validated_data.get('shior')
         if validated_data.get('main_task'):
@@ -177,7 +180,8 @@ class UserProfileSerializer(serializers.Serializer):
             profile = Admin.objects.get_or_create(user=user)[0]
         else:
             profile = Boshqalar.objects.get_or_create(user=user)[0]
-
+        if validated_data.get('sector'):
+            user.sector = validated_data.get('sector')
         if validated_data.get('first_name'):
             user.first_name = validated_data.get('first_name')
         if validated_data.get('last_name'):
