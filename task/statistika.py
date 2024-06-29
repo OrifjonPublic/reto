@@ -96,11 +96,11 @@ def one_sector_stat(id):
     sector = (
             Sector.objects.filter(id=id)
             .annotate(
-                total_tasks=Count('user__tasks_assigned_to', distinct=True),
-                tasks_missed=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='missed')),
-                tasks_doing=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='doing')),
-                tasks_finished=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='finished')),
-                tasks_canceled=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='canceled')),
+                total_tasks=Count('user__tasks_assigned_to', distinct=True, filter=Q(user__tasks_assigned_to__is_active=True)),
+                tasks_missed=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='missed', user__tasks_assigned_to__is_active=True)),
+                tasks_doing=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='doing', user__tasks_assigned_to__is_active=True)),
+                tasks_finished=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='finished', user__tasks_assigned_to__is_active=True)),
+                tasks_canceled=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='canceled', user__tasks_assigned_to__is_active=True)),
             )
             .order_by('name')
             .values(
