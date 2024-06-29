@@ -162,7 +162,7 @@ def all_employees_stat_():
 
 
 def one_sector_employees(id):
-    users = User.objects.filter(Q(rank__name=settings.EMPLOYEE)).filter(sector__id=id)
+    users = User.objects.filter(Q(rank__name=settings.EMPLOYEE).filter(Q(rank__name=settings.MANAGER))).filter(sector__id=id)
     statistics = []
 
     for user in users:
