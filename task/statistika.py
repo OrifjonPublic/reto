@@ -16,7 +16,7 @@ def all_stats_main():
     all_tasks = Task.objects.filter(is_active=True)
 
     # Har bir status bo'yicha vazifalar sonini hisoblash
-    tasks_by_status = Task.objects.filter(assigned_to__rank__in=[xodim, manager]).filter(assigned_by__rank=director).values('status').annotate(total=Count('status'))
+    tasks_by_status = Task.objects.filter(assigned_to__rank__in=[xodim, manager]).filter(is_active=True).filter(assigned_by__rank=director).values('status').annotate(total=Count('status'))
 
     doing_tasks = all_tasks.filter(status='doing').count()
     procent_doing = (doing_tasks / total_tasks) * 100 if total_tasks else 0
@@ -54,10 +54,10 @@ def all_sector():
             Sector.objects
             .annotate(
                 total_tasks=Count('user__tasks_assigned_to', distinct=True),
-                tasks_missed=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='missed')),
-                tasks_doing=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='doing')),
-                tasks_finished=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='finished')),
-                tasks_canceled=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='canceled')),
+                tasks_missed=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='missed', user__tasks_assigned_to__is_active=True)),
+                tasks_doing=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='doing', user__tasks_assigned_to__is_active=True)),
+                tasks_finished=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='finished', user__tasks_assigned_to__is_active=True)),
+                tasks_canceled=Count('user__tasks_assigned_to', filter=Q(user__tasks_assigned_to__status='canceled', user__tasks_assigned_to__is_active=True)),
             )
             .order_by('name')
             .values(
@@ -196,7 +196,7 @@ def one_sector_employees(id):
 
 # bir xodimning statistikasi
 def one_employee_stat(id):
-    all_tasks = Task.objects.filter(assigned_to__id=id)
+    all_tasks = Task.objects.filter(assigned_to__id=id).filter(is_active=True)
     total_tasks = all_tasks.count()
 
     # Har bir status bo'yicha vazifalar sonini hisoblash
