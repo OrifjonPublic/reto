@@ -2,9 +2,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from datetime import datetime
-from user.models import Sector
+from user.models import Sector, Position
 
 User = get_user_model()
+
 
 class Task(models.Model):
     STATUS_CHOICES = (

@@ -16,8 +16,37 @@ from task.statistika import (all_stats_main, all_sector,
                         one_sector_stat, one_employee_stat, 
                         one_sector_employees, all_employees_stat_)
 from user.serializers import CompanySerializer
-from user.models import Company
+from user.models import Company, User, Sector
+from user.utils import fake_user
 
+
+class ChangeXodim(APIView):
+    def post(self, request):
+        id = request.data.get('user_id')
+        new_sector = request.data.get('new_sector_id')
+        user = User.objects.get(id=id)
+        
+        if new_sector:
+            old_sector = user.sector.id
+            old_rank = user.rank.id
+            user.sector = Sector.objects.get(id=new_sector)
+            user.save()
+            fake_user(old_sector, old_rank)
+            return Response({
+                'message': 'bolim ozgartirildi.'
+            })
+        return Response({
+            'message': 'bolimi ozgartirilmadi.'
+        })
+
+class ChangeTaskAssignView(APIView):
+    def post(self,request):
+        task_list = request.data.get('tasks_id_list')
+        tasks = Task.objects.filter(assigned_by=request.user)
+        sector_id = tasks.first().assigned_to.sector.id
+        fakeuser = User.objects.get(username=f'zahirauser{sector_id}')
+        tasks.exclude(id__in=task_list).update(assigned_by = fakeuser)
+        return Response({'message': 'topshiriqlar zahira user ga otkazildi'})
 
 class LogoView(APIView):
     def get(self, request):

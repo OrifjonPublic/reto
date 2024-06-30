@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import Token
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from .models import *
+from user.utils import fake_user
 
 
 class UserNotesSerializer(serializers.ModelSerializer):
@@ -136,6 +137,14 @@ class UserProfileSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context.get('request').user
+        old_sector = None
+        old_rank = None
+        if hasattr(user, 'sector'):
+            if user.sector:
+                old_sector = user.sector.id
+        if hasattr(user, 'rank'):
+            if user.rank:
+                old_rank = user.rank.id
         if user.rank.name == settings.EMPLOYEE:
             profile = Xodim.objects.get_or_create(user=user)[0]
         elif user.rank.name == settings.MANAGER:
@@ -156,6 +165,8 @@ class UserProfileSerializer(serializers.Serializer):
             user.last_name = validated_data.get('last_name')
         if validated_data.get('sector'):
             user.sector = validated_data.get('sector')
+        if validated_data.get('password'):
+            user.set_password(validated_data.get('password'))
         if validated_data.get('shior'):
             profile.shior = validated_data.get('shior')
         if validated_data.get('main_task'):
@@ -165,31 +176,43 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('photo'):
             user.photo = validated_data.get('photo', user.photo)
         user.save()
+        fake_user(old_sector, old_rank)
         profile.save()
         return user
     
     def update(self, instance, validated_data):
         user = instance
-        if user.rank == settings.EMPLOYEE:
+        user = self.context.get('request').user
+        old_sector = None
+        old_rank = None
+        if hasattr(user, 'sector'):
+            if user.sector:
+                old_sector = user.sector.id
+        if hasattr(user, 'rank'):
+            if user.rank:
+                old_rank = user.rank.id
+        if user.rank.name == settings.EMPLOYEE:
             profile = Xodim.objects.get_or_create(user=user)[0]
-        elif user.rank == settings.MANAGER:
+        elif user.rank.name == settings.MANAGER:
             profile = Manager.objects.get_or_create(user=user)[0]
         elif user.rank == settings.BOSS:
             profile = Direktor.objects.get_or_create(user=user)[0]
-        elif user.rank == settings.ASSIST:
+        elif user.rank.name == settings.ASSIST:
             profile = Admin.objects.get_or_create(user=user)[0]
         else:
             profile = Boshqalar.objects.get_or_create(user=user)[0]
-        if validated_data.get('sector'):
-            user.sector = Sector.objects.get(id=validated_data.get('sector'))
         if validated_data.get('first_name'):
             user.first_name = validated_data.get('first_name')
-        if validated_data.get('last_name'):
-            user.last_name = validated_data.get('last_name')
         if validated_data.get('username'):
             user.username = validated_data.get('username')
         if validated_data.get('phone_number'):
             profile.phone_number = validated_data.get('phone_number')
+        if validated_data.get('last_name'):
+            user.last_name = validated_data.get('last_name')
+        if validated_data.get('sector'):
+            user.sector = validated_data.get('sector')
+        if validated_data.get('password'):
+            user.set_password(validated_data.get('password'))
         if validated_data.get('shior'):
             profile.shior = validated_data.get('shior')
         if validated_data.get('main_task'):
@@ -197,11 +220,10 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('birth_date'):
             profile.birth_date = validated_data.get('birth_date')
         if validated_data.get('photo'):
-            user.photo = validated_data.get('photo')
-        
+            user.photo = validated_data.get('photo', user.photo)
         user.save()
+        fake_user(old_sector, old_rank)
         profile.save()
-        
         return user
 
 class PasswordSerializer(serializers.Serializer):

@@ -6,10 +6,13 @@ from .views import (MainStatView, AllSectorStatView,
                     TaskListView, TaskDirectorListView,
                     TasksOneSectorView, TasksOneXodimByBossView, TasksOneXodimByMAnagerView,
                     OneSectorEmployeeStatView, TasksByManagerListView,AllEmployeesStatView,
-                    LogoView)
+                    LogoView, ChangeTaskAssignView)
 
 
 urlpatterns = [
+
+    path('change/tasks/', ChangeTaskAssignView.as_view(), name='change_tasks_of_managers'),
+
     #Logo
     path('logo/create/', LogoView.as_view(), name='logo'),
 
