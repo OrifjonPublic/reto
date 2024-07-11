@@ -210,7 +210,8 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('last_name'):
             user.last_name = validated_data.get('last_name')
         if validated_data.get('sector'):
-            user.sector = validated_data.get('sector')
+            sector = Sector.objects.get(id=validated_data.get('sector'))
+            user.sector = sector
         if validated_data.get('password'):
             user.set_password(validated_data.get('password'))
         if validated_data.get('shior'):
