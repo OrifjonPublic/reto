@@ -182,7 +182,7 @@ class UserProfileSerializer(serializers.Serializer):
     
     def update(self, instance, validated_data):
         user = instance
-        user = self.context.get('request').user
+        # user = self.context.get('request').user
         old_sector = None
         old_rank = None
         if hasattr(user, 'sector'):
