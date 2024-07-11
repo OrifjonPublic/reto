@@ -176,7 +176,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('photo'):
             user.photo = validated_data.get('photo', user.photo)
         user.save()
-        fake_user(old_sector, old_rank)
+        # fake_user(old_sector, old_rank)
         profile.save()
         return user
     
@@ -223,7 +223,7 @@ class UserProfileSerializer(serializers.Serializer):
         if validated_data.get('photo'):
             user.photo = validated_data.get('photo', user.photo)
         user.save()
-        fake_user(old_sector, old_rank)
+        # fake_user(old_sector, old_rank)
         profile.save()
         return user
 
